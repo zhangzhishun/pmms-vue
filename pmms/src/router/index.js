@@ -1,13 +1,12 @@
 // 所有路由信息
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '@/components/Login'
-import PartyAdmin from '@/components/admin/partyAdmin/PartyAdmin'
-import PersonalInfo from '@/components/admin/personalInfo/PersonalInfo'
-import RecruiteParty from '@/components/admin/recruiteParty/RecruiteParty'
-import StudentInfo from '@/components/student/studentInfo/StudentInfo'
-import AdminMain from '@/components/admin/AdminMain'
-import StudentMain from '@/components/student/StudentMain'
+// 自己写的页面配置路由信息
+import Login from '@/views/page-login'
+import Register from '@/views/page-register'
+import ChangePassword from '@/views/page-change-password'
+import AdminMain from '@/views/page-admin-main'
+import StudentMain from '@/views/page-student-main'
 
 Vue.use(Router)
 
@@ -48,33 +47,17 @@ export default new Router({
       }
     },
     {
-      path: '/partyAdmin',
-      name: 'partyAdmin',
-      component: PartyAdmin,
+      path: '/changePassword',
+      name: 'changePassword',
+      component: ChangePassword,
       meta: {
         requireAuth: true
       }
     },
     {
-      path: '/personalInfo',
-      name: 'personalInfo',
-      component: PersonalInfo,
-      meta: {
-        requireAuth: true
-      }
-    },
-    {
-      path: '/studentInfo',
-      name: 'studentInfo',
-      component: StudentInfo,
-      meta: {
-        requireAuth: true
-      }
-    },
-    {
-      path: '/recruiteParty',
-      name: 'recruiteParty',
-      component: RecruiteParty,
+      path: '/register',
+      name: 'Register',
+      component: Register,
       meta: {
         requireAuth: true
       }
