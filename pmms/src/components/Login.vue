@@ -1,32 +1,29 @@
-/** 设计思路 
-先写前端界面：
-    1.登录页面 Login.vue 需要增加多用户角色，不同角色应该跳转到不同的界面
-    2.登陆成功主界面：
-        学生：转到studentInfo/StudentInfo页面
-        三层管理员：转到partyAdmin/PartyAdmin页面
-    3.所有页面
-*/
 <template>
     <div class="login-box">
         <!-- 通过:rules="loginFormRules"来绑定输入内容的校验规则 -->
         <el-form :rules="loginFormRules" ref="loginForm" :model="loginForm" label-position="right" label-width="auto" show-message>
             <span class="login-title">欢迎登录</span>
             <div style="margin-top: 5px"></div>
-            <el-form-item label="用户名" prop="loginName">
+            <el-form-item label="用户名" prop="username">
                 <el-col :span="22">
                     <el-input type="text" v-model="loginForm.username"></el-input>
                 </el-col>
             </el-form-item>
-            <el-form-item label="密码" prop="loginPassword">
+            <el-form-item label="密码" prop="password">
                 <el-col :span="22">
                     <el-input type="password" v-model="loginForm.password"></el-input>
                 </el-col>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="stuLogin('loginForm')">学生登录</el-button>
-                <el-button type="primary" @click="adminLogin('loginForm')">管理员登录</el-button>
-                <el-button type="primary" @click="changePassword()">修改密码</el-button>
-                <el-button type="primary" @click="onRegit()">注册</el-button>
+                <div style="float:center">
+                    <el-button type="primary" @click="stuLogin('loginForm')">学生登录</el-button>
+                    <el-button type="primary" @click="adminLogin('loginForm')">管理员登录</el-button>
+                </div>
+                <div style="float:right; margin-top:10px">
+                    <el-button type="text" @click="changePassword()">修改密码</el-button>
+                    <el-button type="text" @click="onRegit()">注册</el-button>
+                </div>
+                
             </el-form-item>
         </el-form>
     </div>
@@ -66,16 +63,20 @@
                         // POST方式提交表单信息，学生登录成功后跳转到StudentInfo.vue界面
                         this.$axios({
                             method: "post",
-                            url: "loginPost",
+                            url: "stuLogin",
                             data: qs.stringify(this.loginForm),
                         }).then((res) => {
-                            if(res.data.student.password != null){
+                            console.log(res.data.base['success']);
+                            if(res.data.base["code"] == "200"){
                                 // 设置token
                                 store.commit('set_token', res.data.token)  
                                 this.$router.push({path:'./studentMain'})
-                                // this.$router.push({path:'./partyAdmin'})
-                            }else{
-                                alert("登录失败");
+                            }else if(res.data.base["code"] == "400"){
+                                alert("密码错误");
+                            }else if(res.data.base["code"] == "404"){
+                                alert("账号不存在");
+                            }else if(res.data.base["code"] == "500"){
+                                alert("网络异常");
                             }
                         })
                     } else {
@@ -92,7 +93,7 @@
                         // POST方式提交表单信息，所有管理员登录成功后跳转到Main.vue界面
                         this.$axios({
                             method: "post",
-                            url: "loginPost",
+                            url: "adminLogin",
                             data: qs.stringify(this.loginForm),
                         }).then((res) => {
                             if(res.data.student.password != null){
