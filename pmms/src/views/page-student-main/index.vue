@@ -27,8 +27,7 @@
     },
     components: {  // 声明子组件
       StudentInfo,
-      UserButton,
-      store
+      UserButton
     },
     // 创建前状态
       beforeCreate () {
@@ -49,3 +48,7 @@
     }
   }
 </script>
+
+<style scoped>
+
+</style>

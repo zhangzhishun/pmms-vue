@@ -39,8 +39,8 @@
             return {
                 loginForm: {
                     // 默认账号密码输入栏为空
-                    username: '',
-                    password: ''
+                    username: '1',
+                    password: 'admin'
                 },
                 // 表单验证，若未填需要给出提示（在 el-form-item 元素中增加 prop 属性）
                 loginFormRules: {
@@ -96,13 +96,17 @@
                             url: "adminLogin",
                             data: qs.stringify(this.loginForm),
                         }).then((res) => {
-                            if(res.data.student.password != null){
+                            console.log(res.data.base['success']);
+                            if(res.data.base["code"] == "200"){
                                 // 设置token
                                 store.commit('set_token', res.data.token)  
                                 this.$router.push({path:'./adminMain'})
-                                // this.$router.push({path:'./partyAdmin'})
-                            }else{
-                                alert("登录失败");
+                            }else if(res.data.base["code"] == "400"){
+                                alert("密码错误");
+                            }else if(res.data.base["code"] == "404"){
+                                alert("账号不存在");
+                            }else if(res.data.base["code"] == "500"){
+                                alert("网络异常");
                             }
                         })
                     } else {

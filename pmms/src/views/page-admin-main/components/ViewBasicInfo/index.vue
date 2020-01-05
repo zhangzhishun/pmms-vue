@@ -1,25 +1,15 @@
+
 <template>
-<el-container>
-  <el-container>
-    <el-aside width="330px"><AsidePage/></el-aside>
-    <el-main><MainPage/></el-main>
-  </el-container>
-</el-container>
-
-
+<div>
+  <h1>个人信息</h1>
+</div>
 </template>
 
 <script>
     import store from '@/store'
-    import AsidePage from '@/views/page-admin-main/components/AsidePage'
-    import MainPage from '@/views/page-admin-main/components/PartyAdmin/MainPage'
-
     export default {
-        name: "PartyAdmin",
+        name: "ViewBasicInfo",
         components: {
-            //HeaderPage,
-            AsidePage,
-            MainPage,
         },
         // 创建前状态
         beforeCreate () {
@@ -33,9 +23,7 @@
             })
         },
         methods: {
-            handleNodeClick(data) {
-                console.log(data.id);
-            }
+            
         },
         data() {
             return {
@@ -63,7 +51,7 @@
     background-color: rgb(255, 255, 255);
     color: #333;
     text-align: center;
-    line-height: 20px;
+    line-height: 160px;
   }
   
   body > .el-container {

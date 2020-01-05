@@ -19,13 +19,13 @@
     // 引入公共的bug，来做为中间传达的工具
     import Bus from '@/components/Bus/bus.js'
     import store from '@/store'
-    import AsidePage from '@/views/page-student-main/components/AsidePage'
-    import ChangePsw from '@/views/page-student-main/components/ChangePsw'
-    import CheckPayFee from '@/views/page-student-main/components/CheckPayFee'
-    import StatementFee from '@/views/page-student-main/components/StatementFee'
-    import UploadInfo from '@/views/page-student-main/components/UploadInfo'
-    import ViewBasicInfo from '@/views/page-student-main/components/ViewBasicInfo'
-    import ViewUpload from '@/views/page-student-main/components/ViewUpload'
+    import AsidePage from '@/views/page-admin-main/components/PersonalInfoAsidePage'
+    import ChangePsw from '@/views/page-admin-main/components/ChangePsw'
+    import CheckPayFee from '@/views/page-admin-main/components/CheckPayFee'
+    import StatementFee from '@/views/page-admin-main/components/StatementFee'
+    import UploadInfo from '@/views/page-admin-main/components/UploadInfo'
+    import ViewBasicInfo from '@/views/page-admin-main/components/ViewBasicInfo'
+    import ViewUpload from '@/views/page-admin-main/components/ViewUpload'
     
     export default {
         name: "StudentInfo",

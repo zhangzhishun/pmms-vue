@@ -16,9 +16,9 @@
 
 <script>
   // 引入子组件
-  import PartyAdmin from '@/views/page-admin-main/components/PartyAdmin';
-  import RecruiteParty from '@/views/page-admin-main/components/RecruiteParty';
-  import PersonalInfo from '@/views/page-admin-main/components/PersonalInfo';
+  import PartyAdmin from '@/views/page-admin-main/PartyAdmin';
+  import RecruiteParty from '@/views/page-admin-main/RecruiteParty';
+  import PersonalInfo from '@/views/page-admin-main/PersonalInfo';
   import UserButton from '@/components/UserButton'
   import store from '@/store'
   export default {

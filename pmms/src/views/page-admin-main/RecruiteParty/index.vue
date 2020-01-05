@@ -1,17 +1,25 @@
-
 <template>
-<div>
-  <h1>个人信息</h1>
-  <MainPage/>
-</div>
+<el-container>
+  <el-container>
+    <el-aside width="330px"><AsidePage/></el-aside>
+    <el-main><MainPage/></el-main>
+  </el-container>
+</el-container>
+
+
 </template>
 
 <script>
     import store from '@/store'
+    import AsidePage from '@/views/page-admin-main/components/RecruitePartyAsidePage'
+    import MainPage from '@/views/page-admin-main/RecruiteParty/MainPage'
+
     export default {
-        name: "PersonalInfo",
+        name: "RecruiteParty",
         components: {
-          
+            //HeaderPage,
+            AsidePage,
+            MainPage
         },
         // 创建前状态
         beforeCreate () {
@@ -25,7 +33,9 @@
             })
         },
         methods: {
-            
+            handleNodeClick(data) {
+                console.log(data.id);
+            }
         },
         data() {
             return {
@@ -53,7 +63,7 @@
     background-color: rgb(255, 255, 255);
     color: #333;
     text-align: center;
-    line-height: 160px;
+    line-height: 20px;
   }
   
   body > .el-container {

@@ -11,13 +11,15 @@
 
 <script>
     import store from '@/store'
-    import AsidePage from '@/views/page-admin-main/components/AsidePage'
+    import AsidePage from '@/views/page-admin-main/components/PartyAdminAsidePage'
+    import MainPage from '@/views/page-admin-main/PartyAdmin/MainPage'
 
     export default {
-        name: "RecruiteParty",
+        name: "PartyAdmin",
         components: {
             //HeaderPage,
-            AsidePage
+            AsidePage,
+            MainPage,
         },
         // 创建前状态
         beforeCreate () {
