@@ -39,8 +39,8 @@
             return {
                 loginForm: {
                     // 默认账号密码输入栏为空
-                    username: '1',
-                    password: 'admin'
+                    username: 'admin1',
+                    password: 'admin1'
                 },
                 // 表单验证，若未填需要给出提示（在 el-form-item 元素中增加 prop 属性）
                 loginFormRules: {
@@ -66,16 +66,19 @@
                             url: "stuLogin",
                             data: qs.stringify(this.loginForm),
                         }).then((res) => {
-                            console.log(res.data.base['success']);
-                            if(res.data.base["code"] == "200"){
-                                // 设置token
-                                store.commit('set_token', res.data.token)  
+                            console.log(res.data.success);
+                            if(res.data.code == "200"){
+                                // 存储学生学号
+                                //store.commit('set_user', this.loginForm.username,'');  
+                                //console.log(store.commit('get_user'));
+                                sessionStorage.setItem('user',this.loginForm.username);
+                                console.log(sessionStorage.getItem('user'));
                                 this.$router.push({path:'./studentMain'})
-                            }else if(res.data.base["code"] == "400"){
+                            }else if(res.data.code == "400"){
                                 alert("密码错误");
-                            }else if(res.data.base["code"] == "404"){
+                            }else if(res.data.code == "404"){
                                 alert("账号不存在");
-                            }else if(res.data.base["code"] == "500"){
+                            }else if(res.data.code == "500"){
                                 alert("网络异常");
                             }
                         })
@@ -96,16 +99,19 @@
                             url: "adminLogin",
                             data: qs.stringify(this.loginForm),
                         }).then((res) => {
-                            console.log(res.data.base['success']);
-                            if(res.data.base["code"] == "200"){
-                                // 设置token
-                                store.commit('set_token', res.data.token)  
+                            console.log(res.data.success);
+                            if(res.data.code == "200"){
+                                // 存储管理员用户名
+                                //store.commit('set_user', this.loginForm.username,'');  
+                                //console.log(store.commit('get_user'));
+                                sessionStorage.setItem('admLevel',res.data.data.admLevel);
+                                console.log(sessionStorage.getItem('admLevel'));
                                 this.$router.push({path:'./adminMain'})
-                            }else if(res.data.base["code"] == "400"){
+                            }else if(res.data.code == "400"){
                                 alert("密码错误");
-                            }else if(res.data.base["code"] == "404"){
+                            }else if(res.data.code == "404"){
                                 alert("账号不存在");
-                            }else if(res.data.base["code"] == "500"){
+                            }else if(res.data.code == "500"){
                                 alert("网络异常");
                             }
                         })

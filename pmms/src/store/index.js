@@ -5,16 +5,19 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store ({
     state:{  
-        token:''  
+        user:'',
+        role:''
     },  
     mutations:{  
-        set_token(state, token) {  
-            state.token = token  
-            sessionStorage.token = token
+        set_user(user,role) {  
+            state.user = user  
+            state.role = role  
         }, 
-        del_token(state) {  
-            state.token = ''  
-            sessionStorage.removeItem('token')  
+        get_user() {  
+            return user
+        }, 
+        del_user() {  
+            state.user = ''
         } 
     } 
 })

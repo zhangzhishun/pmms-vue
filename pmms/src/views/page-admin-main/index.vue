@@ -39,7 +39,7 @@
     // 创建前状态
       beforeCreate () {
           // 在页面加载前读取sessionStorage
-          if (sessionStorage.getItem('token') != '') {
+          if (sessionStorage.getItem('session') != '') {
               store.state.token = sessionStorage.getItem('token')
           }
           // 在页面刷新前将store保存到sessionStorage里
