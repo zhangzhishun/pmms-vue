@@ -5,17 +5,17 @@
     @selection-change="handleSelectionChange">
         <el-table-column type="selection"> </el-table-column>
         <el-table-column label="日期">
-          <template slot-scope="scope">{{ scope.row.date }}</template>
+          <template slot-scope="scope">{{ scope.row.stuName }}</template>
         </el-table-column>
-        <el-table-column prop="name" label="姓名"> </el-table-column>
-        <el-table-column prop="address" label="地址" show-overflow-tooltip> </el-table-column>
+        <el-table-column prop="stuName" label="姓名"> </el-table-column>
+        <el-table-column prop="stuSex" label="地址" show-overflow-tooltip> </el-table-column>
     </el-table>
     
     <div style="margin-top:20px;float:center">
         <el-pagination
         background
         layout="total,prev, pager, next"
-        :total= 'total'
+        :total= tableData.length
         @current-change="handleCurrentChange"
         :page-size= 'pageSize'>
         </el-pagination>
@@ -37,8 +37,6 @@
     },
     data() {
       return {
-        // 记录该页面一共多少数据
-        total: 9,
         // 设置每一页显示多少数据
         pageSize: 3,
         // 设置当前页
@@ -48,43 +46,33 @@
         // 记录标记了哪些数据 用于excel输出
         multipleSelection: [],
         // 存储表格所有数据
-        tableData: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }]
+        tableData: [],
       }
     },
 
+    create: function() {
+      
+    },
     mounted: function () {
       // 用$on事件来接收参数
       Bus.$on('val', (data) => {
         this.branchNo = data;
         console.log("branchNoPartyAdmin:::" + data);
+        console.log("getRequest::::");
+        console.log(this.getRequest("admin/getAllParty"));
+        let arr = JSON.parse(JSON.stringify(this.getRequest("admin/getAllParty")));
+        //let arr = JSON.parse(JSON.stringify(this.getRequest("admin/getAllParty")));
+        
+        //this.tableData = v;
+        //this.tableData.push(v);
+        console.log("mounted调用返回::");
+        console.log(arr.length);
+
+        //方式二
+        for(var i = 0; i <arr.length; i++){
+            this.tableData.push(arr[i]);
+        }
+
       })
     },
     methods: {
@@ -98,12 +86,26 @@
         }
       },
       handleSelectionChange(val) {
-        this.multipleSelection = val;
+        this.multipleSelection = 1;
       },
       // 方法：获取用户点击的页面传给父组件partyAdmin/MainPage.vue
       handleCurrentChange(newPage) {
           this.currentPage = newPage;
-      }
+      },
+      getRequest(url){
+        var jsonObj;
+        this.$axios({
+          method: "get",
+          url: url
+        }).then((res) => {
+          res.json(response.data) 
+          //jsonObj = JSON.parse(JSON.stringify(res.data.data));
+          console.log("get返回的json值");
+          console.log(res.data);
+          return res.data;
+        })
+      },
+
     }
   }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <el-row class="tac">
     <el-col>
-      <h5>选择支部</h5>
+      <h5>党员管理-选择支部</h5>
       <el-menu default-active="0" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
         <el-submenu index="0">
           <template slot="title">

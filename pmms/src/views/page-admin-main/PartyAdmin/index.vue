@@ -32,6 +32,9 @@
                 sessionStorage.token = store.state.token
             })
         },
+        create: function(){
+          
+        },
         methods: {
             handleNodeClick(data) {
                 console.log(data.id);
