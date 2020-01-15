@@ -58,21 +58,15 @@
       Bus.$on('val', (data) => {
         this.branchNo = data;
         console.log("branchNoPartyAdmin:::" + data);
-        console.log("getRequest::::");
-        console.log(this.getRequest("admin/getAllParty"));
-        let arr = JSON.parse(JSON.stringify(this.getRequest("admin/getAllParty")));
-        //let arr = JSON.parse(JSON.stringify(this.getRequest("admin/getAllParty")));
-        
-        //this.tableData = v;
-        //this.tableData.push(v);
-        console.log("mounted调用返回::");
-        console.log(arr.length);
-
-        //方式二
-        for(var i = 0; i <arr.length; i++){
-            this.tableData.push(arr[i]);
-        }
-
+        // 通过then方法获取promise对象
+        this.getRequest("admin/getAllParty").then(res=>{
+          // res为获得到的state里的数据
+          this.tableData = [];
+          for(var i = 0; i <res.length; i++){
+            this.tableData.push(res[i]);
+            //console.log(this.tableData);
+          }
+        })
       })
     },
     methods: {
@@ -86,25 +80,31 @@
         }
       },
       handleSelectionChange(val) {
-        this.multipleSelection = 1;
+        this.multipleSelection = val;
       },
       // 方法：获取用户点击的页面传给父组件partyAdmin/MainPage.vue
       handleCurrentChange(newPage) {
           this.currentPage = newPage;
       },
-      getRequest(url){
-        var jsonObj;
-        this.$axios({
-          method: "get",
-          url: url
-        }).then((res) => {
-          res.json(response.data) 
-          //jsonObj = JSON.parse(JSON.stringify(res.data.data));
-          console.log("get返回的json值");
-          console.log(res.data);
-          return res.data;
-        })
-      },
+      // Get方法 返回一个Promise对象
+      getRequest : async function(url) {
+        //console.log('calling');
+        let getAwait = ()=>{
+            return new Promise(resolve => {
+              this.$axios({
+                method: "get",
+                url: url,
+              }).then((response) => {
+              if (response.data['data'] != null) {
+                resolve(response.data['data']);
+              }
+            })
+          });
+        }
+        let result = await getAwait();
+        //console.log(result); 
+        return result;
+      }
 
     }
   }
