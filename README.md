@@ -1,5 +1,10 @@
 # pmms-vue
 # 学生党员管理系统vue前端-README.md
+## 所有依赖
+1. vue + element 前端使用饿了么提供的vue框架
+2. axios 用于实现get、post请求
+3. xlsx、file-saver、script-loader 用于将el-table中选中的数据导出到excel中
+
 ## 一、登录功能
 1. 学生登录
 学生登录后将学生学号存储到session中，key为stuId，用于以后针对具体学生进行操作
