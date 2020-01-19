@@ -35,6 +35,9 @@
     import store from '@/store'
     export default {
         name: "login",
+        components: {
+            store,
+        },
         data() {
             return {
                 loginForm: {
@@ -101,11 +104,10 @@
                         }).then((res) => {
                             console.log(res.data.success);
                             if(res.data.code == "200"){
-                                // 存储管理员用户名
-                                //store.commit('set_user', this.loginForm.username,'');  
-                                //console.log(store.commit('get_user'));
-                                sessionStorage.setItem('admLevel',res.data.data.admLevel);
-                                console.log(sessionStorage.getItem('admLevel'));
+                                // 存储管理员用户名和管理员等级
+                                this.$store.commit('setUser', this.loginForm.username);    
+                                this.$store.commit('setRole', res.data.data.admLevel);    
+                                //console.log(this.$store.state.user);
                                 this.$router.push({path:'./adminMain'})
                             }else if(res.data.code == "400"){
                                 alert("密码错误");

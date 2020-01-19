@@ -3,23 +3,18 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const store = new Vuex.Store ({
+const state = new Vuex.Store ({
     state:{  
         user:'',
         role:''
-    },  
+    },
     mutations:{  
-        set_user(user,role) {  
-            state.user = user  
-            state.role = role  
-        }, 
-        get_user() {  
-            return user
-        }, 
-        del_user() {  
-            state.user = ''
-        } 
-    } 
+        setUser(state,user){
+            state.user = user
+        },
+        setRole(state,role){
+            state.role = role
+        }
+    }
 })
-
-export default store
+export default state

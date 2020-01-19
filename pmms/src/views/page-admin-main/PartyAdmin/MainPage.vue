@@ -43,8 +43,7 @@
               </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-              <el-button @click="dialogFormVisible = false">取 消</el-button>
-              <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+              <el-button type="primary" @click="dialogFormVisible = false">关 闭</el-button>
             </div>
           </el-dialog>
           </template>
