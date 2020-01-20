@@ -3,11 +3,14 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
 import store from '@/store'
+import moment from "moment"
 
+// 用于改变时间格式
+Vue.prototype.$moment = moment;
 Vue.config.productionTip = false
 // 使用ElementUI
 Vue.use(ElementUI);

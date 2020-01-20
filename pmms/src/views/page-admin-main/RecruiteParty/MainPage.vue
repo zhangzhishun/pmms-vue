@@ -7,69 +7,14 @@
         <el-table-column type="selection"> </el-table-column>
         <el-table-column label="姓名">
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click="browseDetails(scope.row.stuId)">
+            <el-button type="text" size="small" @click="browseDetailsForm(scope.row.stuId)">
               {{ scope.row.stuName}}
             </el-button>
-            <!-- 弹出学生详细信息对话框 -->
-            <el-dialog title="学生详细信息" :visible.sync="dialogFormVisible">
-              <el-form :model="browseDetailData">
-                <el-form-item label="照片" :label-width="formLabelWidth">
-                  <el-col :span="12">
-                    <div class="demo-basic--circle">
-                      <div class="block"><el-avatar shape="square" :size="50" :src="browseDetailData.stuPhoto"></el-avatar></div>
-                    </div>
-                  </el-col> 
-                </el-form-item>
-                <el-form-item  label="姓名" :label-width="formLabelWidth">
-                  <el-input v-model="browseDetailData.stuName" autocomplete="off" :readonly="tableConfig.readonly"></el-input>
-                </el-form-item>
-                <el-form-item label="性别" :label-width="formLabelWidth">
-                  <el-input v-model="browseDetailData.stuSex" autocomplete="off" :readonly="tableConfig.readonly"></el-input>
-                </el-form-item>
-                <el-form-item label="籍贯" :label-width="formLabelWidth">
-                  <el-input v-model="browseDetailData.stuOriginPlace" autocomplete="off" :readonly="tableConfig.readonly"></el-input>
-                </el-form-item>
-                <el-form-item label="专业" :label-width="formLabelWidth">
-                  <el-input v-model="browseDetailData.majorName" autocomplete="off" :readonly="tableConfig.readonly"></el-input>
-                </el-form-item>
-                <el-form-item label="班级" :label-width="formLabelWidth">
-                  <el-input v-model="browseDetailData.stuclassName" autocomplete="off" :readonly="tableConfig.readonly"></el-input>
-                </el-form-item>
-                <el-form-item label="联系方式" :label-width="formLabelWidth">
-                  <el-input v-model="browseDetailData.stuContactInformation" autocomplete="off" :readonly="tableConfig.readonly"></el-input>
-                </el-form-item>
-                <div>
-                  <span v-for="(value,index) in browseDetailData.levelName" :key="value">
-                    <el-form-item :label="value+'-确立时间'" :label-width="formLabelWidth">
-                      <el-input v-model="browseDetailData.applyTime[index]" autocomplete="off" :readonly="tableConfig.readonly"></el-input>
-                      <div style="margin-top:5px;float:right">
-                        <el-button @click="downLoad(browseDetailData.fileName[index])">下载附件</el-button>
-                      </div>
-                    </el-form-item>
-                  </span>
-                </div>
-              </el-form>
-              <div slot="footer" class="dialog-footer">
-                <!-- 如果管理员有权限删除那么显示删除记录按钮 -->
-                <div v-if="tableConfig.couldDel" style="float:right;margin-left:20px">
-                  <el-button type="danger" @click="deleteStudent(browseDetailData.stuId)">删除记录</el-button>
-                </div>
-                <!-- 如果是可编辑状态那么显示更新按钮 -->
-                <div v-if="tableConfig.readonly==false" style="float:right;margin-left:10px">
-                  <el-button type="primary" @click="updateStudent(browseDetailData.stuId)">更 新</el-button>
-                </div>
-                <el-button @click="dialogFormVisible = false">关 闭</el-button>
-              </div>
-            </el-dialog>
-          <!-- 弹出学生详细信息对话框 END -->
-          <el-dialog title="添加学生记录" :visible.sync="addStudentFormVisible">
-            <AddStudent/>
-          </el-dialog>
           </template>
         </el-table-column>
         <el-table-column prop="stuSex" label="性别"> </el-table-column>
         <el-table-column prop="majorName" label="专业"> </el-table-column>
-        <el-table-column prop="stuclassName" label="班级"> </el-table-column>
+        <el-table-column prop="stuClassName" label="班级"> </el-table-column>
         <el-table-column prop="levelName" label="级别" show-overflow-tooltip> </el-table-column>
     </el-table>
     
@@ -83,8 +28,14 @@
         </el-pagination>
     </div>
 
+    <!-- 添加按钮 点击触发事件 -->
     <div style="margin:10px;float:right">
-      <el-button @click="addStudentFormVisible = true">添加</el-button>
+      <el-button @click="addStudentForm">添加</el-button>
+    </div>
+
+    <!-- 更新和添加学生界面显示在界面，通过点击按钮触发是否显示 -->
+    <div>
+      <UpdateStudent/><AddStudent/>
     </div>
   </div>
 </template>
@@ -98,9 +49,13 @@
   import store from '@/store'
   // 添加学生对话框组件
   import AddStudent from '@/views/page-admin-main/components/AddStudent';
+  // 修改/查看学生对话框组件
+  import UpdateStudent from '@/views/page-admin-main/components/UpdateStudent';
+
   export default {
     components: {
       AddStudent,
+      UpdateStudent,
     },
     data() {
       return {
@@ -115,35 +70,8 @@
           multipleSelection: [],
           // 存储表格所有数据
           tableData: [],
-          // 是否为只读（不可编辑） 如果管理员等级小于3那么设置为只读（不可编辑）
-          readonly: this.$store.state.role<3?true:false,
-          // 是否可删除  如果管理员等级大于2那么管理员可以删除学生
-          couldDel: this.$store.state.role>2?true:false
         },
-        // 弹出学生详细信息对话框
-        dialogFormVisible: false,
-        // 弹出添加学生记录对话框
-        addStudentFormVisible: false,
-        // 详细信息展示的数据
-        browseDetailData: {
-          // 姓名 性别 籍贯 专业 班级 照片 联系方式 所有身份 成为每一步的时间 所有附件
-          stuId: '',
-          stuName: '',
-          stuSex: '',
-          stuOriginPlace: '',
-          majorName: '',
-          stuclassName: '',
-          stuPhoto: '',
-          stuContactInformation: '',
-          levelName: [],
-          applyTime: [],
-          fileName: [],
-        },
-        // 设置弹出信息宽度
-        formLabelWidth: '130px'
       }
-    },
-    create: function() {
     },
     mounted: function () {
       // 用$on事件来接收参数
@@ -157,10 +85,10 @@
           pb = 1; level = data;
         }else if(data <= 10){
           // 计算机软件支部
-          pb = 1; level = data-5;
+          pb = 2; level = data-5;
         }else {
           // 电商信管支部
-          pb = 1; level = data-10;
+          pb = 3; level = data-10;
         }
         // 根据支部编号和学生等级发起post查询学生信息
         this.$axios({
@@ -183,16 +111,16 @@
       })
     },
     methods: {
+      // 处理列表选中事件
       handleSelectionChange(val) {
         this.tableConfig.multipleSelection = val;
       },
-      // 方法：获取用户点击的页面传给父组件partyAdmin/MainPage.vue
+      // 方法：修改当前页码
       handleCurrentChange(newPage) {
-          this.tableConfig.currentPage = newPage;
+       this.tableConfig.currentPage = newPage;
       },
       // Get方法 返回一个Promise对象
       getRequest : async function(url) {
-        //console.log('calling');
         let getAwait = ()=>{
             return new Promise(resolve => {
               this.$axios({
@@ -209,46 +137,17 @@
         //console.log(result); 
         return result;
       },
-      // 点击学生查看详细信息
-      browseDetails(stuId){
-        this.dialogFormVisible = true;
-        console.log(stuId);
-        // 通过then方法获取promise对象
-        this.getRequest("admin/getStudentByStuId/"+stuId).then(res=>{
-          console.log(res);
-          // res为获得到的state里的数据
-          // 包含：姓名 性别 籍贯 专业 班级 照片 联系方式 所有身份 成为每一步的时间 所有附件
-          this.browseDetailData.stuId = res[0].stuId ;
-          this.browseDetailData.stuName = res[0].stuName ;
-          this.browseDetailData.stuSex = res[0].stuSex ;
-          this.browseDetailData.stuOriginPlace = res[0].stuOriginPlace ;
-          this.browseDetailData.majorName = res[0].majorName ;
-          this.browseDetailData.stuclassName = res[0].stuclassName ;
-          this.browseDetailData.stuPhoto = res[0].stuPhoto ;
-          this.browseDetailData.stuContactInformation = res[0].stuContactInformation ;
-          this.browseDetailData.levelName = [];
-          this.browseDetailData.applyTime = [];
-          this.browseDetailData.fileName = [];
-          for(var i=0;i<res.length;i++){
-            this.browseDetailData.levelName.push(res[i].levelName);
-            this.browseDetailData.applyTime.push(res[i].applyTime);
-            this.browseDetailData.fileName.push(res[i].fileName);
-          }
-          console.log(this.browseDetailData.applyTime);
-        })
+      // 编辑/查看学生详细记录
+      browseDetailsForm(stuId){
+        console.log("studentId::" + stuId);
+        Bus.$emit('stuId', stuId);
+        Bus.$emit('updateStudentFormVisible', true);
+        
       },
-      // 下载学生附件
-      downLoad(fileName){
-        console.log("下载文件"+fileName+" "+this.$store.state.role);
-      },
-      // 删除学生记录
-      deleteStudent(stuId){
-        console.log("删除记录：" + stuId);
-      },
-      // 更新学生记录
-      updateStudent(stuId){
-        console.log("更新记录：" + stuId);
-      },
+      // 添加学生记录
+      addStudentForm(stuId){
+        Bus.$emit('addStudentFormVisible', true);
+      }
     }
   }
 </script>

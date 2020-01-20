@@ -42,8 +42,8 @@
             return {
                 loginForm: {
                     // 默认账号密码输入栏为空
-                    username: 'admin1',
-                    password: 'admin1'
+                    username: 'admin3',
+                    password: 'admin3'
                 },
                 // 表单验证，若未填需要给出提示（在 el-form-item 元素中增加 prop 属性）
                 loginFormRules: {
