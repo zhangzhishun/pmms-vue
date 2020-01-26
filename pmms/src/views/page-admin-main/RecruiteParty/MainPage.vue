@@ -30,12 +30,13 @@
 
     <!-- 添加按钮 点击触发事件 -->
     <div style="margin:10px;float:right">
-      <el-button @click="addStudentForm">添加</el-button>
+      <el-button type="primary" @click="addStudentForm">添加申请人</el-button>
+      <el-button type="primary" @click="addApplyInfoForm">添加积极分子及以上</el-button>
     </div>
 
     <!-- 更新和添加学生界面显示在界面，通过点击按钮触发是否显示 -->
     <div>
-      <UpdateStudent/><AddStudent/>
+      <UpdateStudent/><AddStudent/><AddApplyInfo/>
     </div>
   </div>
 </template>
@@ -47,8 +48,10 @@
   import * as qs from "qs";
   // 用户登录后将数据保存到store中
   import store from '@/store'
-  // 添加学生对话框组件
+  // 添加学生申请者对话框组件
   import AddStudent from '@/views/page-admin-main/components/AddStudent';
+  // 添加学生积极分子对话框组件
+  import AddApplyInfo from '@/views/page-admin-main/components/AddApplyInfo';
   // 修改/查看学生对话框组件
   import UpdateStudent from '@/views/page-admin-main/components/UpdateStudent';
 
@@ -56,6 +59,7 @@
     components: {
       AddStudent,
       UpdateStudent,
+      AddApplyInfo,
     },
     data() {
       return {
@@ -144,9 +148,13 @@
         Bus.$emit('updateStudentFormVisible', true);
         
       },
-      // 添加学生记录
-      addStudentForm(stuId){
+      // 添加申请者学生记录
+      addStudentForm(){
         Bus.$emit('addStudentFormVisible', true);
+      },
+      // 添加积极分子及以上记录
+      addApplyInfoForm(){
+        Bus.$emit('addApplyInfoFormVisible', true);
       }
     }
   }

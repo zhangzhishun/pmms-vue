@@ -1,47 +1,24 @@
 <template>
-    <!-- 弹出添加学生信息对话框 -->
-    <el-dialog title="学生详细信息" :visible.sync="addStudentFormVisible">
+    <!-- 弹出添加积极分子学生信息对话框 -->
+    <el-dialog title="添加学生身份信息" :visible.sync="addApplyInfoFormVisible">
         <el-form :model="addStudentFormData">
             <div style="text-align:left">
-            <el-form-item label="学生照片" :label-width="formLabelWidth" ref="uploadElement" prop="img">
-                <el-input v-model="configForm.img" v-if="false"></el-input>
-                <el-upload
-                    class="avatar-uploader"
-                    action="http://localhost:9000/pmms/admin/uploadHeadFile"
-                    :show-file-list="false"
-                    :on-success="handleAvatarSuccess"
-                    :before-upload="beforeAvatarUpload">
-                    <img v-if="addStudentFormData.imageUrl" :src="addStudentFormData.imageUrl" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-            </el-form-item>
-            <el-form-item  label="姓名" :label-width="formLabelWidth">
+            <el-form-item label="姓名" :label-width="formLabelWidth">
                 <el-input v-model="addStudentFormData.stuName" autocomplete="off" ></el-input>
             </el-form-item>
-            <el-form-item  label="学号" :label-width="formLabelWidth">
+            <el-form-item label="学号" :label-width="formLabelWidth">
                 <el-input v-model="addStudentFormData.stuId" autocomplete="off" ></el-input>
-            </el-form-item>
-            <el-form-item label="性别" :label-width="formLabelWidth">
-                <el-input v-model="addStudentFormData.stuSex" autocomplete="off" ></el-input>
-            </el-form-item>
-            <el-form-item label="班级" :label-width="formLabelWidth">
-                <el-input v-model="addStudentFormData.stuClassName" autocomplete="off" ></el-input>
-            </el-form-item>
-            <el-form-item label="联系方式" :label-width="formLabelWidth">
-                <el-input v-model="addStudentFormData.stuContactInformation" autocomplete="off" ></el-input>
-            </el-form-item>
-            <el-form-item label="籍贯" :label-width="formLabelWidth">
-                <el-input v-model="addStudentFormData.stuOriginPlace" autocomplete="off" ></el-input>
-            </el-form-item>            
-            <el-form-item label="家庭住址" :label-width="formLabelWidth">
-                <el-input v-model="addStudentFormData.stuAddress" autocomplete="off" ></el-input>
-            </el-form-item>
+            </el-form-item>  
             <el-form-item label="学生身份" :label-width="formLabelWidth">
-                <el-input v-model="addStudentFormData.levelName" :readonly=true></el-input>
+                <el-select v-model="addStudentFormData.levelId" placeholder="请选择学生要添加的身份" >
+                    <el-option
+                    v-for="item in addStudentFormData.options"
+                    :key="item.levelId"
+                    :label="item.label"
+                    :value="item.levelId">
+                    </el-option>
+                </el-select>
             </el-form-item>    
-            <el-form-item label="学生登录密码" :label-width="formLabelWidth">
-                <el-input v-model="addStudentFormData.stuPassword"></el-input>
-            </el-form-item>     
             <el-form-item label="附件" :label-width="formLabelWidth">
                 <el-upload
                     class="upload-demo"
@@ -75,25 +52,21 @@
         },
         mounted: function () {
             // 用$on事件来接收参数 判断查看/编辑详细信息页面是否显示
-            Bus.$on('addStudentFormVisible', (data) => {
-                this.addStudentFormVisible = data;
+            Bus.$on('addApplyInfoFormVisible', (data) => {
+                this.addApplyInfoFormVisible = data;
             })     
         },
         data() {
             return {
                 addStudentFormData: {
                     // 密码 姓名 性别 照片 籍贯 班级名 联系方式 家庭住址 是否交纳党费
-                    stuId:'20160001',
-                    stuPassword: '123456',
-                    stuName: '张三',
-                    stuSex: '男',
-                    stuPhoto: '',
-                    stuOriginPlace: '河北省保定市',
-                    stuClassName: '计科1601',
-                    stuContactInformation: '12345678900',
-                    stuAddress: '河北省承德市',
-                    // 身份值
-                    levelName: '申请人',
+                    stuName: '',
+                    stuId: '',
+                    // 身份选项
+                    options: [{levelId: '1',label: '积极分子'}, {levelId: '2',label: '发展对象'
+                    }, {levelId: '3',label: '预备党员'}, {levelId: '4',label: '正式党员'}],
+                    // 身份选项值
+                    levelId: '',
                     // 附件名
                     fileName: [],
                     // vue使用的值 不传递
@@ -103,7 +76,7 @@
                 // 设置弹出信息宽度
                 formLabelWidth: '130px',
                 // 弹出添加学生记录对话框
-                addStudentFormVisible: false,
+                addApplyInfoFormVisible: false,
             }
         },
         methods: {
@@ -146,16 +119,10 @@
                     data: qs.stringify({data:JSON.stringify(this.addStudentFormData)}),
                 }).then((res) => {
                     console.log(res.data);
-                    // 如果返回code为200说明后台处理了请求  否则输出网络错误
                     if(res.data.code == "200"){
-                        // 如果返回的success为true代表后台添加成功 否则直接输出返回的msg消息
-                        if(res.data.success == true){
-                            alert("添加成功");
-                        }else {
-                            alert(res.data.msg);
-                        }
+                        alert("添加成功");
                     }else {
-                        alert("网络错误");
+                        alert("添加失败");
                     }
                 })
             },
