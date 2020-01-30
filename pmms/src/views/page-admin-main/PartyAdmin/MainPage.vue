@@ -10,47 +10,11 @@
             <el-button type="text" size="small" @click="browseDetails(scope.row.stuId)">
               {{ scope.row.stuName}}
             </el-button>
-            <!-- 弹出对话框 -->
-            <el-dialog title="学生详细信息" :visible.sync="dialogFormVisible">
-            <el-form :model="browseDetailData">
-              <el-form-item label="照片" :label-width="formLabelWidth">
-                <el-col :span="12">
-                  <div class="demo-basic--circle">
-                    <div class="block"><el-avatar shape="square" :size="50" :src="browseDetailData.stuPhoto"></el-avatar></div>
-                  </div>
-                </el-col> 
-              </el-form-item>
-              <el-form-item  label="姓名" :label-width="formLabelWidth">
-                <el-input v-model="browseDetailData.stuName" autocomplete="off" :readonly="true"></el-input>
-              </el-form-item>
-              <el-form-item label="性别" :label-width="formLabelWidth">
-                <el-input v-model="browseDetailData.stuSex" autocomplete="off" :readonly="true"></el-input>
-              </el-form-item>
-              <el-form-item label="籍贯" :label-width="formLabelWidth">
-                <el-input v-model="browseDetailData.stuOriginPlace" autocomplete="off" :readonly="true"></el-input>
-              </el-form-item>
-              <el-form-item label="联系方式" :label-width="formLabelWidth">
-                <el-input v-model="browseDetailData.stuContactInformation" autocomplete="off" :readonly="true"></el-input>
-              </el-form-item>
-              <el-form-item label="级别" :label-width="formLabelWidth">
-                <el-input v-model="browseDetailData.levelName" autocomplete="off" :readonly="true"></el-input>
-              </el-form-item>
-              <el-form-item label="家庭住址" :label-width="formLabelWidth">
-                <el-input v-model="browseDetailData.stuAddress" autocomplete="off" :readonly="true"></el-input>
-              </el-form-item>
-              <el-form-item label="班主任" :label-width="formLabelWidth">
-                <el-input v-model="browseDetailData.teaName" autocomplete="off" :readonly="true"></el-input>
-              </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-              <el-button type="primary" @click="dialogFormVisible = false">关 闭</el-button>
-            </div>
-          </el-dialog>
           </template>
         </el-table-column>
         <el-table-column prop="stuSex" label="性别"> </el-table-column>
         <el-table-column prop="majorName" label="专业"> </el-table-column>
-        <el-table-column prop="stuclassName" label="班级"> </el-table-column>
+        <el-table-column prop="stuClassName" label="班级"> </el-table-column>
         <el-table-column prop="levelName" label="级别" show-overflow-tooltip> </el-table-column>
     </el-table>
     
@@ -67,6 +31,11 @@
     <div style="margin:20px;float:right">
         <el-button @click="exportExcel">导出为表格</el-button>
     </div>
+
+    <!-- 浏览学生详细信息 -->
+    <div>
+      <ScanStudent/>
+    </div>
   </div>
 </template>
 
@@ -78,9 +47,12 @@
   import XLSX from 'xlsx'
   // 导入包含函数的excel模块
   //import Excel from '@/components/excel'
+  // 查看学生对话框组件
+  import ScanStudent from '@/views/page-admin-main/components/ScanStudent';
 
   export default {
     components: {
+      ScanStudent,
     },
     data() {
       return {
@@ -96,27 +68,7 @@
           // 存储表格所有数据
           tableData: [],
         },
-        // 弹出对话框
-        dialogFormVisible: false,
-
-        // 详细信息展示的数据
-        browseDetailData: {
-          // 照片，姓名，性别，籍贯，联系方式，级别，家庭住址，班主任
-          stuPhoto: '',
-          stuName: '',
-          stuSex: '',
-          stuOriginPlace: '',
-          stuContactInformation: '',
-          levelName: '',
-          stuAddress: '',
-          teaName: ''
-        },
-        // 设置弹出信息宽度
-        formLabelWidth: '80px'
       }
-    },
-
-    create: function() {
     },
     mounted: function () {
       // 用$on事件来接收参数
@@ -161,24 +113,11 @@
         //console.log(result); 
         return result;
       },
-      // 点击学生查看详细信息
+      // 点击触发ScanStudent控件
       browseDetails(stuId){
-        this.dialogFormVisible = true;
-        // 通过then方法获取promise对象
-        this.getRequest("admin/getStudentByStuId/"+stuId).then(res=>{
-          // res为获得到的state里的数据
-          // 包含 照片，姓名，性别，籍贯，联系方式，级别，家庭住址，班主任
-          this.browseDetailData.stuPhoto = res[0].stuPhoto ;
-          this.browseDetailData.stuName = res[0].stuName ;
-          this.browseDetailData.stuSex = res[0].stuSex ;
-          this.browseDetailData.stuOriginPlace = res[0].stuOriginPlace ;
-          this.browseDetailData.stuContactInformation = res[0].stuContactInformation ;
-          this.browseDetailData.levelName = res[0].levelName ;
-          this.browseDetailData.stuAddress = res[0].stuAddress ;
-          this.browseDetailData.teaName = res[0].teaName ;
-        })
+        Bus.$emit('stuId', stuId);
+        Bus.$emit('scanStudentFormVisible', true);
       },
-
       /** 实现导入指定内容到excel中 */
       // 导出数据到表格中
       exportExcel () {

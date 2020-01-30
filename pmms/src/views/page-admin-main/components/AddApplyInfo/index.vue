@@ -3,12 +3,12 @@
     <el-dialog title="添加学生身份信息" :visible.sync="addApplyInfoFormVisible">
         <el-form :model="addStudentFormData">
             <div style="text-align:left">
+            <el-form-item label="学号" :label-width="formLabelWidth">
+                <el-input v-model="addStudentFormData.stuId" autocomplete="off" ></el-input>
+            </el-form-item>
             <el-form-item label="姓名" :label-width="formLabelWidth">
                 <el-input v-model="addStudentFormData.stuName" autocomplete="off" ></el-input>
             </el-form-item>
-            <el-form-item label="学号" :label-width="formLabelWidth">
-                <el-input v-model="addStudentFormData.stuId" autocomplete="off" ></el-input>
-            </el-form-item>  
             <el-form-item label="学生身份" :label-width="formLabelWidth">
                 <el-select v-model="addStudentFormData.levelId" placeholder="请选择学生要添加的身份" >
                     <el-option
@@ -60,18 +60,17 @@
             return {
                 addStudentFormData: {
                     // 密码 姓名 性别 照片 籍贯 班级名 联系方式 家庭住址 是否交纳党费
-                    stuName: '',
-                    stuId: '',
+                    stuName: '张三',
+                    stuId: '20160001',
                     // 身份选项
-                    options: [{levelId: '1',label: '积极分子'}, {levelId: '2',label: '发展对象'
-                    }, {levelId: '3',label: '预备党员'}, {levelId: '4',label: '正式党员'}],
+                    options: [{levelId: '2',label: '积极分子'}, {levelId: '3',label: '发展对象'
+                    }, {levelId: '4',label: '预备党员'}, {levelId: '5',label: '正式党员'}],
                     // 身份选项值
-                    levelId: '',
+                    levelId: '2',
                     // 附件名
                     fileName: [],
                     // vue使用的值 不传递
                     fileList: [],
-                    imageUrl: '',
                 },
                 // 设置弹出信息宽度
                 formLabelWidth: '130px',
@@ -80,49 +79,26 @@
             }
         },
         methods: {
-            // 上传头像成功后执行的函数
-            handleAvatarSuccess(res, file) {
-                console.log(res.data);
-                // 预览图片
-                this.addStudentFormData.imageUrl = URL.createObjectURL(file.raw);
-                // 后台返回存储图片的名字  保存起来用于POST
-                this.addStudentFormData.stuPhoto = res.data;
-                console.log(this.addStudentFormData);
-            },
-            // 上传头像过程
-            beforeAvatarUpload(file) {
-                const isJPG = file.type === 'image/jpeg';
-                const isGIF = file.type === 'image/gif';
-                const isPNG = file.type === 'image/png';
-                const isBMP = file.type === 'image/bmp';
-                const isLt2M = file.size / 1024 / 1024 < 2;
-                if (!isJPG && !isGIF && !isPNG && !isBMP) {
-                    this.$message.error('上传图片必须是JPG/GIF/PNG/BMP 格式!');
-                }
-                if (!isLt2M) {
-                    this.$message.error('上传头像图片大小不能超过 2MB!');
-                }
-                if((isJPG || isBMP || isGIF || isPNG) && isJPG && isLt2M){
-                    this.addStudentFormData.imageUrl = file.url;
-                    return true;
-                }else{
-                    return false;
-                }
-            },
             // 点击添加(提交)按钮
             submit(){
                 console.log("submit");
                 // POST方式提交表单信息
                 this.$axios({
                     method: "post",
-                    url: "admin/addStudent",
+                    url: "admin/addApplyInfo",
                     data: qs.stringify({data:JSON.stringify(this.addStudentFormData)}),
                 }).then((res) => {
                     console.log(res.data);
+                    // 如果返回code为200说明后台处理了请求  否则输出网络错误
                     if(res.data.code == "200"){
-                        alert("添加成功");
+                        // 如果返回的success为true代表后台添加成功 否则直接输出返回的msg消息
+                        if(res.data.success == true){
+                            alert("添加成功");
+                        }else {
+                            alert(res.data.msg);
+                        }
                     }else {
-                        alert("添加失败");
+                        alert("网络错误");
                     }
                 })
             },

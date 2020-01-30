@@ -118,10 +118,9 @@
             },
             // 上传头像过程
             beforeAvatarUpload(file) {
+                const isJPEG = file.type === 'image/jpeg';
                 const isJPG = file.type === 'image/jpeg';
-                const isGIF = file.type === 'image/gif';
                 const isPNG = file.type === 'image/png';
-                const isBMP = file.type === 'image/bmp';
                 const isLt2M = file.size / 1024 / 1024 < 2;
                 if (!isJPG && !isGIF && !isPNG && !isBMP) {
                     this.$message.error('上传图片必须是JPG/GIF/PNG/BMP 格式!');
@@ -129,7 +128,7 @@
                 if (!isLt2M) {
                     this.$message.error('上传头像图片大小不能超过 2MB!');
                 }
-                if((isJPG || isBMP || isGIF || isPNG) && isJPG && isLt2M){
+                if((isJPG || isJPEG || isPNG) && isLt2M){
                     this.addStudentFormData.imageUrl = file.url;
                     return true;
                 }else{

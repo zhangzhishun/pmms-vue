@@ -4,8 +4,9 @@
         <el-form :model="browseDetailData">
         <el-form-item label="照片" :label-width="formLabelWidth">
             <el-col :span="12">
-            <div class="demo-basic--circle">
-                <div class="block"><el-avatar shape="square" :size="50" :src="browseDetailData.stuPhoto"></el-avatar></div>
+            <div class="demo-basic--circle" style="float:left">
+                <!-- :src="require('@/assets/upload/' + browseDetailData.stuPhoto)" -->
+                <div class="block"><el-avatar shape="square" :size="50" :src="require('@/assets/upload/' + browseDetailData.stuPhoto)" ></el-avatar></div>
             </div>
             </el-col> 
         </el-form-item>
@@ -30,21 +31,42 @@
         <div>
             <span v-for="(value,index) in browseDetailData.levelName" :key="value">
             <el-form-item :label="value+'-确立时间'" :label-width="formLabelWidth">
-                <el-date-picker
-                v-model="browseDetailData.applyTime[index]"
-                type="datetime"
-                placeholder="选择日期时间"
-                align="right"
-                :readonly="readonly">
-                </el-date-picker>
+                <div style="float:left">
+                    <el-date-picker
+                    v-model="browseDetailData.applyTime[index]"
+                    type="datetime"
+                    placeholder="选择日期时间"
+                    align="right"
+                    :readonly="readonly">
+                    </el-date-picker>
+                    
+                </div>
                 <div style="float:right">
-                <el-button @click="downLoad(browseDetailData.fileName[index])">
-                    上传附件
-                    <i class="el-icon-upload2 el-icon--right"></i>
-                </el-button>
-                <el-button @click="downLoad(browseDetailData.fileName[index])">
-                    下载附件
-                    <i class="el-icon-download el-icon--right"></i></el-button>
+                    <div style="float:left">
+                        <el-button @click="downLoad(browseDetailData.fileName[index])" size="small" type="primary">
+                        下载附件
+                        <i class="el-icon-download el-icon--right"></i>
+                    </el-button>
+                    </div>
+                    <div style="float:right;margin-left:10px">
+                    <el-upload
+                        class="upload-demo"
+                        action="http://localhost:9000/pmms/admin/uploadHeadFile"
+                        :on-preview="handlePreview"
+                        :on-remove="handleRemove"
+                        :before-remove="beforeRemove"
+                        :on-success="handleUploadSuccess"
+                        multiple
+                        :limit="1"
+                        :on-exceed="handleExceed"
+                        :file-list="browseDetailData.fileList">
+                        <el-button size="small" type="primary">上传附件
+                            <i class="el-icon-upload2 el-icon--right"></i>
+                        </el-button>
+                    </el-upload>
+                    </div>
+                    
+                    
                 </div>
             </el-form-item>
             </span>
@@ -85,6 +107,8 @@
                     levelName: [],
                     applyTime: [],
                     fileName: [],
+                    // vue使用的值 不传递
+                    fileList: [],
                 },
                 // 是否为只读（不可编辑） 如果管理员等级小于3那么设置为只读（不可编辑）
                 readonly: this.$store.state.role<3?true:false,
@@ -155,9 +179,35 @@
                 //console.log(result); 
                 return result;
             },
+            // 上传文件成功后执行的函数
+            handleUploadSuccess(response, file, fileList) {
+                console.log(response.data);
+                // 后台返回存储图片的名字  保存起来用于POST
+                this.browseDetailData.fileName = [];
+                this.browseDetailData.fileName.push(response.data);
+                console.log(this.browseDetailData);
+            },
+            // 删除上传的文件执行的函数
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            // 预览上传文件
+            handlePreview(file) {
+                console.log(file);
+            },
+            // 检查文件个数
+            handleExceed(files, fileList) {
+                this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+            },
+            // 移除文件
+            beforeRemove(file, fileList) {
+                return this.$confirm(`确定移除 ${ file.name }？`);
+            },
             // 下载学生附件
-            downLoad(){
-                console.log("下载文件"+fileName );
+            downLoad(fileName){
+                console.log("下载文件"+ encodeURIComponent(fileName));
+                window.location.href = "http://localhost:9000/pmms/download/"+fileName;
+                // POST方式提交表单信息，所有管理员登录成功后跳转到Main.vue界面
             },
             // 删除学生记录
             deleteStudent(){
