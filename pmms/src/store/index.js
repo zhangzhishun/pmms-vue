@@ -6,7 +6,7 @@ Vue.use(Vuex)
 const state = new Vuex.Store ({
     state:{  
         user:'',
-        role:'3'
+        role:''
     },
     mutations:{  
         setUser(state,user){

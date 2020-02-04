@@ -42,9 +42,9 @@
             return {
                 loginForm: {
                     // 默认账号密码输入栏为空
-                    username: 'admin3',
-                    password: 'admin3'
-                },
+                    username: '20160001',
+                    password: '123456'
+                }, 
                 // 表单验证，若未填需要给出提示（在 el-form-item 元素中增加 prop 属性）
                 loginFormRules: {
                     username: [
@@ -72,10 +72,8 @@
                             console.log(res.data.success);
                             if(res.data.code == "200"){
                                 // 存储学生学号
-                                //store.commit('set_user', this.loginForm.username,'');  
-                                //console.log(store.commit('get_user'));
-                                sessionStorage.setItem('user',this.loginForm.username);
-                                console.log(sessionStorage.getItem('user'));
+                                // 存储管理员用户名和管理员等级
+                                this.$store.commit('setUser', this.loginForm.username);    
                                 this.$router.push({path:'./studentMain'})
                             }else if(res.data.code == "400"){
                                 alert("密码错误");

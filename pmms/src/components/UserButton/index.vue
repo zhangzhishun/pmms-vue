@@ -19,7 +19,9 @@
             },
             // 用户请求退出
             exit() {
-                console.log("用户请求退出")
+                this.$store.commit('setUser', '');    
+                this.$store.commit('setRole', '');  
+                this.$router.push({path:'/'})  
             },
         },
     }

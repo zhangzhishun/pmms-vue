@@ -46,4 +46,23 @@ date = df1.parse(date1.toString());
 //此处是将date类型装换为字符串类型，比如：Sat Nov 18 15:12:06 CST 2017转换为2017-11-18 15:12:06
 SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 result = sf.format(date);
-## 5.
+## 5.vue刷新页面以后丢失store的数据
+刷新页面时vue实例重新加载，store就会被重置，可以把定义刷新前把store存入本地localStorage、sessionStorage、cookie中，localStorage是永久储存，重新打开页面时会读取上一次打开的页面数据，sessionStorage是储存到关闭为止，cookie不适合存大量数据。根据我的需求，最合适的是sessionStorage。
+beforeunload在页面刷新时触发，可以监听这个方法，让页面在刷新前存store到sessionStorage中。
+当然，在页面刷新时还要读取sessionStorage中的数据到store中，读取和储存都写在app.vue中。
+```
+export default {
+  name: 'app',
+  created () {
+    // 在页面加载时读取sessionStorage
+    if (sessionStorage.getItem('store')) {
+      this.$store.replaceState(Object.assign({}, this.$store.state, JSON.parse(sessionStorage.getItem('store'))))
+    }
+    // 在页面刷新时将store保存到sessionStorage里
+    window.addEventListener('beforeunload', () => {
+      sessionStorage.setItem('store', JSON.stringify(this.$store.state))
+    })
+  }
+}
+```
+
