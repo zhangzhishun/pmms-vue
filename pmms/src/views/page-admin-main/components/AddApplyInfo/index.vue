@@ -1,5 +1,5 @@
 <template>
-    <!-- 弹出添加积极分子学生信息对话框 -->
+    <!-- 弹出添加积极分子及以上学生信息对话框 -->
     <el-dialog title="添加学生身份信息" :visible.sync="addApplyInfoFormVisible">
         <el-form :model="addStudentFormData">
             <div style="text-align:left">
@@ -60,8 +60,8 @@
             return {
                 addStudentFormData: {
                     // 密码 姓名 性别 照片 籍贯 班级名 联系方式 家庭住址 是否交纳党费
-                    stuName: '张三',
-                    stuId: '20160001',
+                    stuName: '',
+                    stuId: '',
                     // 身份选项
                     options: [{levelId: '2',label: '积极分子'}, {levelId: '3',label: '发展对象'
                     }, {levelId: '4',label: '预备党员'}, {levelId: '5',label: '正式党员'}],

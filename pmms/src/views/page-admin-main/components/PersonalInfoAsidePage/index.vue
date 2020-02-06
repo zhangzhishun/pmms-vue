@@ -20,26 +20,6 @@
             <el-menu-item @click="handleSelect('ChangePsw')" index="2">修改密码</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
-        <el-submenu index="2">
-          <template slot="title">
-            <i class="el-icon-zoom-in"></i>
-            <span>党费信息查询</span>
-          </template>
-          <el-menu-item-group>
-            <el-menu-item @click="handleSelect('CheckPayFee')" index="3">查看是否缴纳党费</el-menu-item>
-            <el-menu-item @click="handleSelect('StatementFee')" index="4">党费费用说明</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-         <el-submenu index="3">
-          <template slot="title">
-            <i class="el-icon-document"></i>
-            <span>个人资料</span>
-          </template>
-          <el-menu-item-group>
-            <el-menu-item @click="handleSelect('ViewUpload')" index="5">查看上传的资料</el-menu-item>
-            <el-menu-item @click="handleSelect('UploadInfo')" index="6">上传资料</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
       </el-menu>
     </el-col>
   </el-row>

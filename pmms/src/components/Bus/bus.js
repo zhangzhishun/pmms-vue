@@ -1,3 +1,3 @@
-// 用于左侧树形菜单和右侧主页之间传值交互
+// 用于组件之间 传值、交互
 import Vue from 'vue'
 export default new Vue()

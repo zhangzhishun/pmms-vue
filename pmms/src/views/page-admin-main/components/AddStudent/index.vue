@@ -1,5 +1,5 @@
 <template>
-    <!-- 弹出添加学生信息对话框 -->
+    <!-- 弹出添加申请人信息对话框 -->
     <el-dialog title="学生详细信息" :visible.sync="addStudentFormVisible">
         <el-form :model="addStudentFormData">
             <div style="text-align:left">
@@ -60,7 +60,7 @@
             </div>
             <el-button type="primary" @click="submit">添 加</el-button>
         </el-form>
-        <!-- 弹出添加学生信息对话框 END -->
+        <!-- 弹出添加申请人对话框 END -->
     </el-dialog>
 </template>
 
@@ -83,15 +83,15 @@
             return {
                 addStudentFormData: {
                     // 密码 姓名 性别 照片 籍贯 班级名 联系方式 家庭住址 是否交纳党费
-                    stuId:'20160001',
-                    stuPassword: '123456',
-                    stuName: '张三',
-                    stuSex: '男',
+                    stuId:'',
+                    stuPassword: '',
+                    stuName: '',
+                    stuSex: '',
                     stuPhoto: '',
-                    stuOriginPlace: '河北省保定市',
-                    stuClassName: '计科1601',
-                    stuContactInformation: '12345678900',
-                    stuAddress: '河北省承德市',
+                    stuOriginPlace: '',
+                    stuClassName: '',
+                    stuContactInformation: '',
+                    stuAddress: '',
                     // 身份值
                     levelName: '申请人',
                     // 附件名

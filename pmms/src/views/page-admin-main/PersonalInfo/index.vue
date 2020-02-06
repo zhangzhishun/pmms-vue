@@ -21,21 +21,13 @@
     import store from '@/store'
     import AsidePage from '@/views/page-admin-main/components/PersonalInfoAsidePage'
     import ChangePsw from '@/views/page-admin-main/components/ChangePsw'
-    import CheckPayFee from '@/views/page-admin-main/components/CheckPayFee'
-    import StatementFee from '@/views/page-admin-main/components/StatementFee'
-    import UploadInfo from '@/views/page-admin-main/components/UploadInfo'
     import ViewBasicInfo from '@/views/page-admin-main/components/ViewBasicInfo'
-    import ViewUpload from '@/views/page-admin-main/components/ViewUpload'
     
     export default {
         name: "StudentInfo",
         components: {
             AsidePage,
             ChangePsw,
-            CheckPayFee,
-            StatementFee,
-            UploadInfo,
-            ViewUpload,
             ViewBasicInfo,
         },
         mounted: function () {
@@ -47,15 +39,15 @@
           })
         },
         // 创建前状态
-        beforeCreate () {
-            // 在页面加载前读取sessionStorage
-            if (sessionStorage.getItem('token') != '') {
-                store.state.token = sessionStorage.getItem('token')
-            }
-            // 在页面刷新前将store保存到sessionStorage里
-            window.addEventListener('beforeunload', () => {
-                sessionStorage.token = store.state.token
-            })
+        created () {
+          // 在页面加载时读取sessionStorage
+          if (sessionStorage.getItem('store')) {
+            this.$store.replaceState(Object.assign({}, this.$store.state, JSON.parse(sessionStorage.getItem('store'))))
+          }
+          // 在页面刷新时将store保存到sessionStorage里
+          window.addEventListener('beforeunload', () => {
+            sessionStorage.setItem('store', JSON.stringify(this.$store.state))
+          })
         },
         methods: {
           
