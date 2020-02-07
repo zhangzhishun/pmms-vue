@@ -20,116 +20,116 @@
                     <el-button type="primary" @click="adminLogin('loginForm')">管理员登录</el-button>
                 </div>
                 <div style="float:right; margin-top:10px">
-                    <el-button type="text" @click="changePassword()">修改密码</el-button>
+                    <el-button type="text" @click="changePassword()">找回密码</el-button>
                     <el-button type="text" @click="onRegit()">注册</el-button>
                 </div>
-                
+
             </el-form-item>
         </el-form>
     </div>
 </template>
 <script>
-    // 引入qs实现字符串转换为可以提交的类型
-    import * as qs from "qs";
-    // 用户登录后将token保存到store中，用于判断用户是否已经登录过
-    import store from '@/store'
-    export default {
-        name: "login",
-        components: {
-            store,
-        },
-        data() {
-            return {
-                loginForm: {
-                    // 默认账号密码输入栏为空
-                    username: '20160002',
-                    password: '123456'
-                }, 
-                // 表单验证，若未填需要给出提示（在 el-form-item 元素中增加 prop 属性）
-                loginFormRules: {
-                    username: [
-                        {required: true, message: '账号不可为空', trigger: 'blur'}
-                    ],
-                    password: [
-                        {required: true, message: '密码不可为空', trigger: 'blur'}
-                    ]
-                }
-            }
-        },
-        methods: {
-            // 学生登录
-            stuLogin(formName) {
-                // 为表单绑定验证功能
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        //console.log('submit!');
-                        // POST方式提交表单信息，学生登录成功后跳转到StudentInfo.vue界面
-                        this.$axios({
-                            method: "post",
-                            url: "stuLogin",
-                            data: qs.stringify(this.loginForm),
-                        }).then((res) => {
-                            console.log(res.data.success);
-                            if(res.data.code == "200"){
-                                // 存储学生学号
-                                // 存储管理员用户名和管理员等级
-                                this.$store.commit('setUser', this.loginForm.username);    
-                                this.$router.push({path:'./studentMain'})
-                            }else if(res.data.code == "400"){
-                                alert("密码错误");
-                            }else if(res.data.code == "404"){
-                                alert("账号不存在");
-                            }else if(res.data.code == "500"){
-                                alert("网络异常");
-                            }
-                        })
-                    } else {
-                        return false;
-                    }
-                });
-            },
-            // 管理员登录
-            adminLogin(formName) {
-                // 为表单绑定验证功能
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        //console.log('submit!');
-                        // POST方式提交表单信息，所有管理员登录成功后跳转到Main.vue界面
-                        this.$axios({
-                            method: "post",
-                            url: "adminLogin",
-                            data: qs.stringify(this.loginForm),
-                        }).then((res) => {
-                            console.log(res.data.success);
-                            if(res.data.code == "200"){
-                                // 存储管理员用户名和管理员等级
-                                this.$store.commit('setUser', this.loginForm.username);    
-                                this.$store.commit('setRole', res.data.data.admLevel);    
-                                //console.log(this.$store.state.user);
-                                this.$router.push({path:'./adminMain'})
-                            }else if(res.data.code == "400"){
-                                alert("密码错误");
-                            }else if(res.data.code == "404"){
-                                alert("账号不存在");
-                            }else if(res.data.code == "500"){
-                                alert("网络异常");
-                            }
-                        })
-                    } else {
-                        return false;
-                    }
-                });
-            },
-            // 修改密码
-            changePassword() {
-                this.$router.push({path:'./changePassword'})
-            },
-            // 注册
-            onRegit() {
-                this.$router.push({path:'./register'})
-            }
-        }
+// 引入qs实现字符串转换为可以提交的类型
+import * as qs from 'qs'
+// 用户登录后将token保存到store中，用于判断用户是否已经登录过
+import store from '@/store'
+export default {
+  name: 'login',
+  components: {
+    store
+  },
+  data () {
+    return {
+      loginForm: {
+        // 默认账号密码输入栏为空
+        username: '20160002',
+        password: '123456'
+      },
+      // 表单验证，若未填需要给出提示（在 el-form-item 元素中增加 prop 属性）
+      loginFormRules: {
+        username: [
+          {required: true, message: '账号不可为空', trigger: 'blur'}
+        ],
+        password: [
+          {required: true, message: '密码不可为空', trigger: 'blur'}
+        ]
+      }
     }
+  },
+  methods: {
+    // 学生登录
+    stuLogin (formName) {
+      // 为表单绑定验证功能
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          // console.log('submit!');
+          // POST方式提交表单信息，学生登录成功后跳转到StudentInfo.vue界面
+          this.$axios({
+            method: 'post',
+            url: 'stuLogin',
+            data: qs.stringify(this.loginForm)
+          }).then((res) => {
+            console.log(res.data.success)
+            if (res.data.code == '200') {
+              // 存储学生学号
+              // 存储管理员用户名和管理员等级
+              this.$store.commit('setUser', this.loginForm.username)
+              this.$router.push({path: './studentMain'})
+            } else if (res.data.code == '400') {
+              alert('密码错误')
+            } else if (res.data.code == '404') {
+              alert('账号不存在')
+            } else if (res.data.code == '500') {
+              alert('网络异常')
+            }
+          })
+        } else {
+          return false
+        }
+      })
+    },
+    // 管理员登录
+    adminLogin (formName) {
+      // 为表单绑定验证功能
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          // console.log('submit!');
+          // POST方式提交表单信息，所有管理员登录成功后跳转到Main.vue界面
+          this.$axios({
+            method: 'post',
+            url: 'adminLogin',
+            data: qs.stringify(this.loginForm)
+          }).then((res) => {
+            console.log(res.data.success)
+            if (res.data.code == '200') {
+              // 存储管理员用户名和管理员等级
+              this.$store.commit('setUser', this.loginForm.username)
+              this.$store.commit('setRole', res.data.data.admLevel)
+              // console.log(this.$store.state.user);
+              this.$router.push({path: './adminMain'})
+            } else if (res.data.code == '400') {
+              alert('密码错误')
+            } else if (res.data.code == '404') {
+              alert('账号不存在')
+            } else if (res.data.code == '500') {
+              alert('网络异常')
+            }
+          })
+        } else {
+          return false
+        }
+      })
+    },
+    // 找回密码
+    changePassword () {
+      this.$router.push({path: './changePassword'})
+    },
+    // 注册
+    onRegit () {
+      this.$router.push({path: './register'})
+    }
+  }
+}
 </script>
 <style scoped>
     .login-box {
